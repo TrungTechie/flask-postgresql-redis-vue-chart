@@ -10,7 +10,8 @@ class ApiError extends Error {
 
     this.constructor = ApiError;
     Object.setPrototypeOf(this, ApiError.prototype);
-
+    console.log(data);
+    console.log(JSON.stringify(data));
     this.data = data;
     this.status = status;
   }

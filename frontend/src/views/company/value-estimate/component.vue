@@ -22,7 +22,7 @@
         </Card>
       </div>
       <div class="value-estimate-section">
-        <Table :data="estimateTableData"></Table>
+        <Table :data="estimateTableData" :commentModal="false"></Table>
       </div>
     </div>
   </div>
@@ -85,7 +85,8 @@ export default defineComponent({
       comments: props.company.comments,
       hideCategories: true,
     }));
-
+    console.log(' ******************************** this is estimate table data ********************************');
+    console.log(estimateTableData.value);
     return {
       estimateTableData,
     };

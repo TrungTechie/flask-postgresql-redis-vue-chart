@@ -62,6 +62,7 @@ const httpRequest = (method: string) => async (
     method,
     url: `${config.url}${urlWithSlash}`,
     headers: {},
+    maxRedirects: 0,
   };
 
   const token = localStorage.getItem('access-token');
@@ -89,7 +90,6 @@ const httpRequest = (method: string) => async (
     response = await axios(options);
   } catch (error) {
     const err = error as AxiosError;
-
     if (!err.response) {
       throwApiError({
         data: { errors: generalError },

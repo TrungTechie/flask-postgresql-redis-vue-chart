@@ -32,7 +32,7 @@ export const estimateTableRows: TableRow[] = [  // eslint-disable-line
     handler: money,
   },
   {
-    name: 'ㅤTerminal value',
+    name: ' Terminal value',
     key: 'terminalValue',
     showCounter: false,
     separate: false,

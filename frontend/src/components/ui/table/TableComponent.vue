@@ -2,7 +2,7 @@
   <div
     class="table"
   >
-    <div class="table-modal" v-if="isCommentModalShown"
+    <div class="table-modal" v-if="commentModal && isCommentModalShown"
       :style="{ top: modalPosition.Y + 'px', left: modalPosition.X + 'px' }">
       <Card>
         <div class="table-modal-header">
@@ -40,7 +40,7 @@
                   v-model="comment.title"
                   placeholder="Enter header text"
                   @change="saveComment(index)"
-                  v-if="comment.column"
+                  v-if="!comment.column"
                 >
                 <p v-else>{{ new Date(comment.createdAt).toLocaleDateString() }}</p>
                 <div class="table-modal-comment-control">
@@ -49,7 +49,7 @@
                   </button>
                 </div>
               </div>
-              <p v-if="comment.column">{{ new Date(comment.createdAt).toLocaleDateString() }}</p>
+              <p>{{ new Date(comment.createdAt).toLocaleDateString() }}</p>
 
               <Textarea
                 v-model:value="comment.text"
@@ -125,11 +125,12 @@
                   'font-weight': override(row, category).weight || '',
                   'color': row.editable && category.editable
                     ? 'var(--theme-link-color)' : (category.color || ''),
-                  'cursor': 'pointer',
-                }"
+                    'cursor': (row.editable && category.editable) ? 'pointer' : '',
+                  }"
                 class="table-value"
                 @click="
-                  (data.comments !== undefined && isCommentEnabled) ?
+                  (data.comments !== undefined && isCommentEnabled
+                    && !(row.editable && category.editable)) ?
                   createComment($event, row.key, value[data.column]) : (
                     (row.editable && category.editable) ? (
                       data.editEvent ?
@@ -232,6 +233,11 @@ export default defineComponent({
       type: Object as PropType<TableData>,
       required: true,
     },
+    commentModal: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   emits: ['edit', 'newComment', 'editComment', 'deleteComment'],
   setup(props, { emit }) {
@@ -250,13 +256,11 @@ export default defineComponent({
     const activeComment = ref<number | undefined>(undefined);
 
     const computedData = computed(() => props.data);
-
     const { compile, clearCache } = useCompiler(computedData);
 
     const isCommentEnabled = computed(() => store.state.application.commentCursor);
     const columns = computed(() => {
       const data: string[] = [];
-
       props.data.categories.forEach((category) => {
         if (!category.hidden) {
           category.values.forEach((value) => {
@@ -295,7 +299,23 @@ export default defineComponent({
       }
 
       const overrided = override(row, category);
-
+      if (row.key === 'enterpriseValue') {
+        console.log(' ******************************** here is enterprise value ******************************** ');
+        console.log(value);
+        console.log(' ******************************** here is context ********************************');
+        console.log(context);
+        console.log(' ******************************** here is category ********************************');
+        console.log(category);
+        console.log(' ******************************** here is render ********************************');
+        console.log(render);
+        console.log(' ******************************** here is expression ********************************');
+        console.log(expression);
+        console.log(' ******************************** here is overrided ********************************');
+        console.log(overrided);
+        if (overrided.handler && render) {
+          console.log(overrided.handler(expression));
+        }
+      }
       return overrided.handler && render ? overrided.handler(expression) : expression;
     };
 
@@ -365,10 +385,9 @@ export default defineComponent({
 
     const createComment = (event: MouseEvent, field: string, column?: string) => {
       // Get mouse coordinates relative to the document
-      const mouseX = event.pageX;
-      const mouseY = event.pageY;
-      console.log(mouseX, mouseY, event.pageY, window.scrollY);
-
+      const mouseX = event.pageX - (event.pageX - 300) * (1 / 2);
+      const mouseY = event.pageY - window.innerHeight * (1 / 2)
+        - (event.pageY - window.scrollY - window.innerHeight / 2) / 5 + 50;
       const modalWidth = 850; // Adjust as needed
       const documentWidth = document.documentElement.clientWidth;
       const documentHeight = document.documentElement.clientHeight;
@@ -455,7 +474,7 @@ export default defineComponent({
   /* position: fixed;
   top: 50%;
   left: 50%; */
-  transform: translate(-10%, -100%);
+  transform: translate(0%, 0%);
   z-index: 10;
   min-width: 428px;
 }

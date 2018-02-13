@@ -10,10 +10,10 @@
         <p>{{ stockPrice }} USD</p>
       </div>
       <div class="company-price-row">
-        <p>{{ currentDate }}</p>
+        <p>{{ lastUpdatedDate }}</p>
         <p :style="{
           color: stockPriceColor,
-        }">({{ stockPriceChange }}%) ({{isWeekend ? 'Monday' : 'Today'}})</p>
+        }">({{ stockPriceChange }}%) ({{lastUpdatedDay}})</p>
       </div>
     </div>
     <div class="company-keywords">
@@ -79,9 +79,6 @@ export default defineComponent({
     });
 
     const stockPriceColor = computed(() => {
-      console.log(' **************************************************** here is company data ************************************************************************************');
-      console.log(props.company.data);
-      console.log(' **************************************************** here is company data ************************************************************************************');
       if (props.company.data.stockPriceChange > 0) {
         return '#21B232';
       }
@@ -89,11 +86,43 @@ export default defineComponent({
       return '#FC382C';
     });
 
-    const currentDate = computed(() => {
-      const month = date.value.toLocaleString('en-US', { month: 'short' });
-      const hour = date.value.getUTCHours().toString().padStart(2, '0');
-      const minute = date.value.getUTCMinutes().toString().padStart(2, '0');
-      return `${month} ${date.value.getUTCDate()}, ${hour}:${minute} EDT`;
+    const lastUpdatedDate = computed(() => {
+      const latestUpdateTime = new Date(props.company.data.latestUpdate);
+      const month = latestUpdateTime.toLocaleString('en-US', { month: 'short' });
+      const hour = latestUpdateTime.getUTCHours().toString().padStart(2, '0');
+      const minute = latestUpdateTime.getUTCMinutes().toString().padStart(2, '0');
+      return `${month} ${latestUpdateTime.getUTCDate()}, ${hour}:${minute} EDT`;
+    });
+
+    const lastUpdatedDay = computed(() => {
+      let theDay;
+      switch (new Date(props.company.data.latestUpdate).getDay()) {
+        case 0:
+          theDay = 'Sunday';
+          break;
+        case 1:
+          theDay = 'Monday';
+          break;
+        case 2:
+          theDay = 'Tuesday';
+          break;
+        case 3:
+          theDay = 'Wednesday';
+          break;
+        case 4:
+          theDay = 'Thursday';
+          break;
+        case 5:
+          theDay = 'Friday';
+          break;
+        case 6:
+          theDay = 'Saturday';
+          break;
+        default:
+          theDay = 'Monday';
+          break;
+      }
+      return theDay;
     });
 
     const isWeekend = computed(() => date.value.getDay() === 0 || date.value.getDay() >= 5);
@@ -110,8 +139,9 @@ export default defineComponent({
       stockPriceChange,
       isWeekend,
       stockPriceColor,
-      currentDate,
+      lastUpdatedDate,
       keywords,
+      lastUpdatedDay,
     };
   },
 });

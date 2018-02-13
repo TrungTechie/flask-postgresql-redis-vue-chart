@@ -16,6 +16,8 @@ interface Company {
   stockPriceChange: number;
   week52High: number;
   week52Low: number;
+  lastTradeTime: number,
+  latestUpdate: number,
 }
 
 interface ValuationAndEarnings {
