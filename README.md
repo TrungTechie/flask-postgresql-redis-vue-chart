@@ -1,0 +1,1 @@
+# fastapi-postgresql-redis-vue-chart
