@@ -122,7 +122,7 @@ async def get_company_chart(
     stock_price = await get_company_stock_prices(company, period)
     free_cash_flow_per_share = await get_company_financial_data(company, period, 'free_cash_flow_per_share')
     earnings_per_share = await get_company_financial_data(company, period, 'earnings_per_share')
-
+    
     chart_data = {}
 
     if stock_price:
