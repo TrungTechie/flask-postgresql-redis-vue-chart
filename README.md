@@ -1,7 +1,16 @@
 
 # This is the chart of stock price...
-<img src="./result/chart.png" alt="result of task3" />
+<img src="./result/main.png" alt="result of task3" />
+
+# This is the financial performance and init information ...
+<img src="./result/1.png" alt="result of task3" />
 
 
-# This is the table of stock price...
-<img src="./result/table.png" alt="result of task3" />
+# This is the financials in chart...
+<img src="./result/2.png" alt="result of task3" />
+
+# This is the compared table of companies' financials in chart...
+<img src="./result/3.png" alt="result of task3" />
+
+# This is the Financial data of a company in table...
+<img src="./result/4.png" alt="result of task3" />
